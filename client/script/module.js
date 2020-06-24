@@ -18,6 +18,7 @@ export const type_color = {
 export async function fetchMyPokemon(i) {
   const url = await `https://pokeapi.co/api/v2/pokemon/${i}`;
   const res = await fetch(url);
+
   const pokemon = await res.json();
   const { id, name, types, stats, weight, base_experience } = pokemon;
 

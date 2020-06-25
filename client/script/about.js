@@ -6,21 +6,17 @@ const btns = document.querySelectorAll(".tab-btn");
 const articles = document.querySelectorAll(".content");
 const img = document.querySelector("img");
 
-//const key = localStorage[0] || 1;
-const key = window.location.href.split("/")[3];
-
-// https://pokeres.bastionbot.org/images/pokemon/${id}.png
-
-img.src = `https://pokeres.bastionbot.org/images/pokemon/${key}.png`;
-
-async function setPokemon() {
-  const pokemonInfo = await fetchMyPokemon(key);
-  const { id, name, type } = pokemonInfo;
-
+(async function () {
   const idSpan = document.querySelector("#id");
   const nameSpan = document.querySelector("#name");
 
   const div = document.querySelector("#type");
+  const key = window.location.href.split("/")[4];
+
+  const pokemonInfo = await fetchMyPokemon(key);
+  const { id, name, type } = pokemonInfo;
+
+  img.src = `https://pokeres.bastionbot.org/images/pokemon/${key}.png`;
 
   idSpan.textContent = id;
   nameSpan.textContent = name;
@@ -32,9 +28,7 @@ async function setPokemon() {
     p.style.display = "block";
     div.appendChild(p);
   }
-}
-
-setPokemon();
+})();
 
 about.addEventListener("click", (e) => {
   const { id } = e.target.dataset;

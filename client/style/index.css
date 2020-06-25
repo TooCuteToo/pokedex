@@ -343,3 +343,17 @@ Home
   right: 1rem;
   font-size: 0.9em;
 }
+
+.page-nav {
+  margin-top: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page {
+  margin-right: 1rem;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+}

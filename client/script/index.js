@@ -1,9 +1,15 @@
-import { type_color, fetchMyPokemon } from "./module.js";
+import { type_color, fetchMyPokemon, pages } from "./module.js";
 
-async function getPokemonList() {
+const home = document.querySelector(".home-center");
+const pageNav = document.querySelector(".page-nav");
+
+const page = window.location.href.split("/")[3] || 1;
+const [start, end] = pages[page];
+
+async function getPokemonList(start, end) {
   const pokemonList = [];
 
-  for (let i = 1; i <= 10; ++i) {
+  for (let i = start; i <= end; ++i) {
     const pokemon = await fetchMyPokemon(i);
     pokemonList.push(pokemon);
   }
@@ -11,14 +17,14 @@ async function getPokemonList() {
   return pokemonList;
 }
 
-function createUserDiv(i, weight, base_experience) {
+function createUserDiv(weight, base_experience, img) {
   const user = document.createElement("div");
 
   const userInnerHtml = `
     <div class="level center">Exp: ${base_experience}</div>
     <div class="user-img">
       <img
-        src="https://pokeres.bastionbot.org/images/pokemon/${i + 1}.png"
+        src="${img}"
         alt="poke-img"
       />
     </div>
@@ -30,15 +36,15 @@ function createUserDiv(i, weight, base_experience) {
   return user;
 }
 
-function createInfoDiv(i, name, stats) {
+function createInfoDiv(id, name, stats) {
   const info = document.createElement("div");
   const statsDiv = document.createElement("div");
 
   const infoInnerHtml = `
-    <h1 data-id=${i + 1}>${name}</h1>
+    <h1 data-id=${id}>${name}</h1>
     <div class="coords">
       <span>ID</span>
-      <span>${String(i + 1).padStart(3, "0")}</span>
+      <span>${String(id).padStart(3, "0")}</span>
     </div>
     <div class="coords">
       <span>Name</span>
@@ -62,10 +68,10 @@ function createInfoDiv(i, name, stats) {
   return info;
 }
 
-function createGeneralDiv(i, name) {
+function createGeneralDiv(id, name) {
   const general = document.createElement("div");
 
-  const generalInnerHtml = `<h1 data-id=${i + 1}>${name}</h1>
+  const generalInnerHtml = `<h1 data-id=${id}>${name}</h1>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce a
       volutpat mauris, at molestie lacus. Nam vestibulum sodales odio ut
@@ -79,49 +85,51 @@ function createGeneralDiv(i, name) {
   return general;
 }
 
-function getTypeColor(type) {
-  return type_color[type[0]];
+function renderLayout(pokemon) {
+  const {
+    id,
+    name: pokeName,
+    stats,
+    img,
+    type,
+    weight,
+    base_experience,
+  } = pokemon;
+
+  const cardDiv = document.createElement("div");
+  const additionalDiv = document.createElement("div");
+
+  cardDiv.classList.add("card");
+  additionalDiv.classList.add("additional");
+  additionalDiv.style.background = type_color[type[0]];
+
+  const user = createUserDiv(weight, base_experience, img);
+  const info = createInfoDiv(id, pokeName, stats);
+  const general = createGeneralDiv(id, pokeName);
+
+  additionalDiv.appendChild(user);
+  additionalDiv.appendChild(info);
+
+  cardDiv.appendChild(additionalDiv);
+  cardDiv.appendChild(general);
+  cardDiv.dataset.id = id;
+
+  home.appendChild(cardDiv);
 }
 
-const home = document.querySelector(".home-center");
-
-getPokemonList().then((pokemonList) => {
-  for (let i = 0; i < 10; ++i) {
-    const cardDiv = document.createElement("div");
-    const additionalDiv = document.createElement("div");
-    const {
-      id,
-      name: pokeName,
-      stats,
-      type,
-      weight,
-      base_experience,
-    } = pokemonList[i];
-
-    cardDiv.classList.add("card");
-    additionalDiv.classList.add("additional");
-    additionalDiv.style.background = type_color[type[0]];
-
-    const user = createUserDiv(i, weight, base_experience);
-    const info = createInfoDiv(i, pokeName, stats);
-    const general = createGeneralDiv(i, pokeName);
-
-    additionalDiv.appendChild(user);
-    additionalDiv.appendChild(info);
-
-    cardDiv.appendChild(additionalDiv);
-    cardDiv.appendChild(general);
-    cardDiv.dataset.id = id;
-
-    home.appendChild(cardDiv);
-  }
+getPokemonList(start, end).then((pokemonList) => {
+  pokemonList.forEach((pokemon) => renderLayout(pokemon));
 
   home.addEventListener("click", (e) => {
     const { id } = e.target.dataset;
 
-    if (id) {
-      window.location = `../about.html`;
-      window.location.href = `http://localhost:5000/${id}`;
-    }
+    if (id) window.location.href = `http://localhost:5000/pokemon/${id}`;
   });
+});
+
+pageNav.addEventListener("click", (e) => {
+  const { target } = e;
+
+  if (target.classList.value === "page")
+    window.location.href = `http://localhost:5000/${target.textContent}`;
 });

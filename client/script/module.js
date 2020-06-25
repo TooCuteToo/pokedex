@@ -15,6 +15,12 @@ export const type_color = {
   water: "#9DB7F5",
 };
 
+export const pages = {
+  1: [1, 10],
+  2: [11, 20],
+  3: [21, 30],
+};
+
 export async function fetchMyPokemon(i) {
   const url = await `https://pokeapi.co/api/v2/pokemon/${i}`;
   const res = await fetch(url);
@@ -26,6 +32,7 @@ export async function fetchMyPokemon(i) {
     id,
     name,
     weight,
+    img: `https://pokeres.bastionbot.org/images/pokemon/${i}.png`,
     base_experience,
     type: types.map((type) => type.type.name),
     stats: stats.map((stat) => ({

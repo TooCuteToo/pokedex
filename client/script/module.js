@@ -19,6 +19,8 @@ export const pages = {
   1: [1, 10],
   2: [11, 20],
   3: [21, 30],
+  4: [31, 40],
+  5: [41, 50],
 };
 
 export async function fetchMyPokemon(i) {

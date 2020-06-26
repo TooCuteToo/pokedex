@@ -85,40 +85,55 @@ function createGeneralDiv(id, name) {
   return general;
 }
 
+function sectionComponent(pokemon) {
+  const layouts = [];
+  const { id, name, stats, img, weight, base_experience } = pokemon;
+
+  const user = createUserDiv(weight, base_experience, img);
+  const info = createInfoDiv(id, name, stats);
+  const general = createGeneralDiv(id, name);
+
+  layouts.push(user, info, general);
+
+  return layouts;
+}
+
+function pageComponent() {
+  const pageNav = document.querySelector(".page-nav");
+  const pageNumber = Object.keys(pages).length;
+
+  for (let i = 0; i < pageNumber; ++i) {
+    const page = document.createElement("button");
+    page.classList.add("page");
+    page.textContent = i + 1;
+    pageNav.appendChild(page);
+  }
+}
+
 function renderLayout(pokemon) {
-  const {
-    id,
-    name: pokeName,
-    stats,
-    img,
-    type,
-    weight,
-    base_experience,
-  } = pokemon;
+  const { id, type } = pokemon;
+  const layouts = sectionComponent(pokemon);
 
   const cardDiv = document.createElement("div");
   const additionalDiv = document.createElement("div");
 
-  cardDiv.classList.add("card");
   additionalDiv.classList.add("additional");
   additionalDiv.style.background = type_color[type[0]];
 
-  const user = createUserDiv(weight, base_experience, img);
-  const info = createInfoDiv(id, pokeName, stats);
-  const general = createGeneralDiv(id, pokeName);
+  for (let i = 0; i < 2; ++i) additionalDiv.appendChild(layouts[i]);
 
-  additionalDiv.appendChild(user);
-  additionalDiv.appendChild(info);
+  cardDiv.classList.add("card");
+  cardDiv.dataset.id = id;
 
   cardDiv.appendChild(additionalDiv);
-  cardDiv.appendChild(general);
-  cardDiv.dataset.id = id;
+  cardDiv.appendChild(layouts[2]);
 
   home.appendChild(cardDiv);
 }
 
 getPokemonList(start, end).then((pokemonList) => {
   pokemonList.forEach((pokemon) => renderLayout(pokemon));
+  pageComponent();
 
   home.addEventListener("click", (e) => {
     const { id } = e.target.dataset;

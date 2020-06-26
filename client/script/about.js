@@ -13,10 +13,17 @@ const img = document.querySelector("img");
   const div = document.querySelector("#type");
   const key = window.location.href.split("/")[4];
 
-  const pokemonInfo = await fetchMyPokemon(key);
+  let pokemonInfo = null;
+
+  try {
+    pokemonInfo = await fetchMyPokemon(key);
+  } catch {
+    window.location.href = `http://localhost:5000/pokemon/${1}`;
+  }
+
   const { id, name, type } = pokemonInfo;
 
-  img.src = `https://pokeres.bastionbot.org/images/pokemon/${key}.png`;
+  img.src = `https://pokeres.bastionbot.org/images/pokemon/${id}.png`;
 
   idSpan.textContent = id;
   nameSpan.textContent = name;

@@ -20,7 +20,7 @@ app.get("/:id", (req, res) =>
 );
 
 app.get("/pokemon/:id", (req, res) => {
-  if (isNaN(req.params.id)) res.redirect("/pokemon/1");
+  //if (isNaN(req.params.id)) res.redirect("/pokemon/1");
   res.sendFile(path.join(__dirname, "../client", "about.html"));
 });
 

@@ -2,6 +2,7 @@ import { type_color, fetchMyPokemon, pages } from "./module.js";
 
 const home = document.querySelector(".home-center");
 const pageNav = document.querySelector(".page-nav");
+const header = document.querySelector("header");
 
 const page = window.location.href.split("/")[3] || 1;
 const [start, end] = pages[page];
@@ -134,12 +135,12 @@ function renderLayout(pokemon) {
 getPokemonList(start, end).then((pokemonList) => {
   pokemonList.forEach((pokemon) => renderLayout(pokemon));
   pageComponent();
+});
 
-  home.addEventListener("click", (e) => {
-    const { id } = e.target.dataset;
+home.addEventListener("click", (e) => {
+  const { id } = e.target.dataset;
 
-    if (id) window.location.href = `http://localhost:5000/pokemon/${id}`;
-  });
+  if (id) window.location.href = `http://localhost:5000/pokemon/${id}`;
 });
 
 pageNav.addEventListener("click", (e) => {
@@ -148,3 +149,16 @@ pageNav.addEventListener("click", (e) => {
   if (target.classList.value === "page")
     window.location.href = `http://localhost:5000/${target.textContent}`;
 });
+
+['click', 'keydown'].forEach(evenListner => {
+  header.addEventListener(evenListner, (e) => {
+    const { target } = e;
+  
+    if (target.classList.value === "search-btn" || e.keyCode === 13) {
+      const input = document.querySelector("input[type='text']");
+      window.location.href = `http://localhost:5000/pokemon/${input.value || 1}`;
+    }
+  });
+})
+
+

@@ -23,8 +23,8 @@ export const pages = {
   5: [41, 50],
 };
 
-export async function fetchMyPokemon(i) {
-  const url = await `https://pokeapi.co/api/v2/pokemon/${i}`;
+export async function fetchMyPokemon(key) {
+  const url = await `https://pokeapi.co/api/v2/pokemon/${key}`;
   const res = await fetch(url);
 
   const pokemon = await res.json();
@@ -34,7 +34,7 @@ export async function fetchMyPokemon(i) {
     id,
     name,
     weight,
-    img: `https://pokeres.bastionbot.org/images/pokemon/${i}.png`,
+    img: `https://pokeres.bastionbot.org/images/pokemon/${id}.png`,
     base_experience,
     type: types.map((type) => type.type.name),
     stats: stats.map((stat) => ({

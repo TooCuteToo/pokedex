@@ -150,8 +150,8 @@ pageNav.addEventListener("click", (e) => {
     window.location.href = `/${target.textContent}`;
 });
 
-["click", "keydown"].forEach((evenListner) => {
-  header.addEventListener(evenListner, (e) => {
+["click", "keydown"].forEach((eventListener) => {
+  header.addEventListener(eventListener, (e) => {
     const { target } = e;
 
     if (target.classList.value === "search-btn" || e.keyCode === 13) {
@@ -161,4 +161,3 @@ pageNav.addEventListener("click", (e) => {
   });
 });
 
-console.log("html")
